@@ -5,6 +5,8 @@ output:
 html_preview: false
 ---
 
+## Semantic Similarity
+
 ```{r fig.width=7, fig.height=7}
 genes <- c("GABPA", "NANOG", "SOX2", "POU5F1", "TFAP2C", "GATA4", "GATA3",
            "GATA1", "TEAD4", "FOXA1", "RARG", "NR5A2", "ESRRB", "CTCF", "KLF4")
@@ -25,6 +27,8 @@ colnames(sim) <- genes[colnames(sim)]
 DOSE::simplot(sim)
 ```
 
+## Hierarchical clustering
+
 ```{r fig.width=5, fig.height=5}
 library(ggtree)
 phylo <- ape::as.phylo(hclust(as.dist(1-sim), method="ward.D"))
@@ -32,19 +36,20 @@ p = ggtree(phylo) +  geom_tiplab()
 print(p + xlim(0, 0.5))
 ```
 
+## Semantic clustering + expression profile
+
 ```{r fig.width=10, fig.height=5.9}
+library(tidyr)
+library(dplyr)
+
 mergefpkm <- read.table("easy_input.txt",header = T, as.is = 1)
 head(mergefpkm)
 
 ## filtering with motifs in the nature paper:
 ## The landscape of accessible chromatin in mammalian preimplantation embryos
-
 papermotif <- c("GABPA","NANOG","SOX2","POU5F1","TFAP2C","GATA4","GATA3","GATA1",
                 "TEAD4","FOXA1","RARG","NR5A2","ESRRB","CTCF","KLF4")
-pmergefpkm <- merge(mergefpkm,data.frame(gene=papermotif),by="gene")
-
-library(tidyr)
-library(dplyr)
+pmergefpkm <- subset(mergefpkm, gene %in% papermotif)
 
 pscore <- pmergefpkm[, 1:8] %>% gather(type, pscore, -gene) %>%
   group_by(gene, type) %>% summarise(pscore = max(pscore))
@@ -73,4 +78,13 @@ facet_plot(p, panel="Motif", data = d,
   scale_color_viridis_c() + theme(legend.position = "right") + 
   scale_size_continuous(range=c(0,10), name = "-log(p value)")
 ```
-  
+
+
+## Reference
+
+1. Wu J, Huang B, Chen H, et al (2016) The landscape of accessible chromatin in mammalian preimplantation embryos. Nature 534:652–657. https://doi.org/10.1038/nature18606
+2. Yu G, Li F, Qin Y, et al (2010) GOSemSim: an R package for measuring semantic similarity among GO terms and gene products. Bioinformatics 26:976–978. https://doi.org/10.1093/bioinformatics/btq064
+3. Yu G, Wang L-G, Han Y, He Q-Y (2012) clusterProfiler: an R Package for Comparing Biological Themes Among Gene Clusters. OMICS J Integr Biol 16:284–287. https://doi.org/10.1089/omi.2011.0118
+4. Yu G, Wang L-G, Yan G-R, He Q-Y (2015) DOSE: an R/Bioconductor package for disease ontology semantic and enrichment analysis. Bioinformatics 31:608–609. https://doi.org/10.1093/bioinformatics/btu684
+5. Yu G, Smith DK, Zhu H, et al (2017) ggtree: an r package for visualization and annotation of phylogenetic trees with their covariates and other associated data. Methods Ecol Evol 8:28–36. https://doi.org/10.1111/2041-210X.12628
+6. Yu G, Lam TT-Y, Zhu H, Guan Y (2018) Two Methods for Mapping and Visualizing Associated Data on Phylogeny Using Ggtree. Mol Biol Evol 35:3041–3043. https://doi.org/10.1093/molbev/msy194
