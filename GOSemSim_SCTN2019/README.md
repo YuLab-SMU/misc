@@ -7,70 +7,6 @@ genes <- c("GABPA", "NANOG", "SOX2", "POU5F1", "TFAP2C", "GATA4", "GATA3",
 genes.df <- clusterProfiler::bitr(genes, "SYMBOL", "ENTREZID", "org.Hs.eg.db")
 ```
 
-    ## 
-
-    ## Loading required package: org.Hs.eg.db
-
-    ## Loading required package: AnnotationDbi
-
-    ## Loading required package: stats4
-
-    ## Loading required package: BiocGenerics
-
-    ## Loading required package: parallel
-
-    ## 
-    ## Attaching package: 'BiocGenerics'
-
-    ## The following objects are masked from 'package:parallel':
-    ## 
-    ##     clusterApply, clusterApplyLB, clusterCall, clusterEvalQ,
-    ##     clusterExport, clusterMap, parApply, parCapply, parLapply,
-    ##     parLapplyLB, parRapply, parSapply, parSapplyLB
-
-    ## The following objects are masked from 'package:stats':
-    ## 
-    ##     IQR, mad, sd, var, xtabs
-
-    ## The following objects are masked from 'package:base':
-    ## 
-    ##     anyDuplicated, append, as.data.frame, basename, cbind,
-    ##     colMeans, colnames, colSums, dirname, do.call, duplicated,
-    ##     eval, evalq, Filter, Find, get, grep, grepl, intersect,
-    ##     is.unsorted, lapply, lengths, Map, mapply, match, mget, order,
-    ##     paste, pmax, pmax.int, pmin, pmin.int, Position, rank, rbind,
-    ##     Reduce, rowMeans, rownames, rowSums, sapply, setdiff, sort,
-    ##     table, tapply, union, unique, unsplit, which, which.max,
-    ##     which.min
-
-    ## Loading required package: Biobase
-
-    ## Welcome to Bioconductor
-    ## 
-    ##     Vignettes contain introductory material; view with
-    ##     'browseVignettes()'. To cite Bioconductor, see
-    ##     'citation("Biobase")', and for packages 'citation("pkgname")'.
-
-    ## Loading required package: IRanges
-
-    ## Loading required package: S4Vectors
-
-    ## 
-    ## Attaching package: 'S4Vectors'
-
-    ## The following object is masked from 'package:base':
-    ## 
-    ##     expand.grid
-
-    ## 
-    ## Attaching package: 'IRanges'
-
-    ## The following object is masked from 'package:grDevices':
-    ## 
-    ##     windows
-
-    ## 
-
     ## 'select()' returned 1:1 mapping between keys and columns
 
 ``` r
@@ -79,14 +15,6 @@ genes <- genes.df[,1]
 names(genes) <- eg
 
 library(GOSemSim)
-```
-
-    ## GOSemSim v2.8.0  For help: https://guangchuangyu.github.io/GOSemSim
-    ## 
-    ## If you use GOSemSim in published research, please cite:
-    ## Guangchuang Yu, Fei Li, Yide Qin, Xiaochen Bo, Yibo Wu, Shengqi Wang. GOSemSim: an R package for measuring semantic similarity among GO terms and gene products Bioinformatics 2010, 26(7):976-978
-
-``` r
 hsGO <- godata('org.Hs.eg.db', ont="BP")
 ```
 
@@ -104,94 +32,25 @@ DOSE::simplot(sim)
 
     ## Using ID as id variables
 
-![](README_files/figure-gfm/unnamed-chunk-1-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
 
 ## Hierarchical clustering
 
 ``` r
 library(ggtree)
-```
-
-    ## ggtree v1.15.6  For help: https://guangchuangyu.github.io/software/ggtree
-    ## 
-    ## If you use ggtree in published research, please cite the most appropriate paper(s):
-    ## 
-    ## [36m-[39m Guangchuang Yu, David Smith, Huachen Zhu, Yi Guan, Tommy Tsan-Yuk Lam. ggtree: an R package for visualization and annotation of phylogenetic trees with their covariates and other associated data. Methods in Ecology and Evolution 2017, 8(1):28-36, doi:10.1111/2041-210X.12628
-    ## 
-    ## [36m-[39m Guangchuang Yu, Tommy Tsan-Yuk Lam, Huachen Zhu, Yi Guan. Two methods for mapping and visualizing associated data on phylogeny using ggtree. Molecular Biology and Evolution 2018, accepted. doi: 10.1093/molbev/msy194
-
-    ## 
-    ## Attaching package: 'ggtree'
-
-    ## The following object is masked from 'package:IRanges':
-    ## 
-    ##     collapse
-
-    ## The following object is masked from 'package:S4Vectors':
-    ## 
-    ##     expand
-
-``` r
 phylo <- ape::as.phylo(hclust(as.dist(1-sim), method="ward.D"))
 p = ggtree(phylo) +  geom_tiplab()
 print(p + xlim(0, 0.5))
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
 
 ## Semantic clustering + expression profile
 
 ``` r
 library(tidyr)
-```
-
-    ## 
-    ## Attaching package: 'tidyr'
-
-    ## The following object is masked from 'package:ggtree':
-    ## 
-    ##     expand
-
-    ## The following object is masked from 'package:S4Vectors':
-    ## 
-    ##     expand
-
-``` r
 library(dplyr)
-```
 
-    ## 
-    ## Attaching package: 'dplyr'
-
-    ## The following object is masked from 'package:AnnotationDbi':
-    ## 
-    ##     select
-
-    ## The following objects are masked from 'package:IRanges':
-    ## 
-    ##     collapse, desc, intersect, setdiff, slice, union
-
-    ## The following objects are masked from 'package:S4Vectors':
-    ## 
-    ##     first, intersect, rename, setdiff, setequal, union
-
-    ## The following object is masked from 'package:Biobase':
-    ## 
-    ##     combine
-
-    ## The following objects are masked from 'package:BiocGenerics':
-    ## 
-    ##     combine, intersect, setdiff, union
-
-    ## The following objects are masked from 'package:stats':
-    ## 
-    ##     filter, lag
-
-    ## The following objects are masked from 'package:base':
-    ## 
-    ##     intersect, setdiff, setequal, union
-
-``` r
 mergefpkm <- read.table("easy_input.txt",header = T, as.is = 1)
 head(mergefpkm)
 ```
@@ -260,27 +119,27 @@ facet_plot(p, panel="Motif", data = d,
   scale_size_continuous(range=c(0,10), name = "-log(p value)")
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
 
 ## Reference
 
 1.  Wu J, Huang B, Chen H, et al (2016) The landscape of accessible
-    chromatin in mammalian preimplantation embryos. Nature
-    534:652鈥\<93\>657. <https://doi.org/10.1038/nature18606>
+    chromatin in mammalian preimplantation embryos. Nature 534:652-657.
+    <https://doi.org/10.1038/nature18606>
 2.  Yu G, Li F, Qin Y, et al (2010) GOSemSim: an R package for measuring
     semantic similarity among GO terms and gene products. Bioinformatics
-    26:976鈥\<93\>978. <https://doi.org/10.1093/bioinformatics/btq064>
+    26:976-978. <https://doi.org/10.1093/bioinformatics/btq064>
 3.  Yu G, Wang L-G, Han Y, He Q-Y (2012) clusterProfiler: an R Package
     for Comparing Biological Themes Among Gene Clusters. OMICS J Integr
-    Biol 16:284鈥\<93\>287. <https://doi.org/10.1089/omi.2011.0118>
+    Biol 16:284-287. <https://doi.org/10.1089/omi.2011.0118>
 4.  Yu G, Wang L-G, Yan G-R, He Q-Y (2015) DOSE: an R/Bioconductor
     package for disease ontology semantic and enrichment analysis.
-    Bioinformatics 31:608鈥\<93\>609.
+    Bioinformatics 31:608-609.
     <https://doi.org/10.1093/bioinformatics/btu684>
 5.  Yu G, Smith DK, Zhu H, et al (2017) ggtree: an r package for
     visualization and annotation of phylogenetic trees with their
-    covariates and other associated data. Methods Ecol Evol
-    8:28鈥\<93\>36. <https://doi.org/10.1111/2041-210X.12628>
+    covariates and other associated data. Methods Ecol Evol 8:28-36.
+    <https://doi.org/10.1111/2041-210X.12628>
 6.  Yu G, Lam TT-Y, Zhu H, Guan Y (2018) Two Methods for Mapping and
     Visualizing Associated Data on Phylogeny Using Ggtree. Mol Biol Evol
-    35:3041鈥\<93\>3043. <https://doi.org/10.1093/molbev/msy194>
+    35:3041-3043. <https://doi.org/10.1093/molbev/msy194>

@@ -7,6 +7,18 @@ html_preview: false
 
 ## Semantic Similarity
 
+```{r include=F}
+library(ggplot2)
+library(GOSemSim)
+library(ggtree)
+library(tidyr)
+library(dplyr)
+library(org.Hs.eg.db)
+library(DOSE)
+library(clusterProfiler)
+```
+
+
 ```{r fig.width=7, fig.height=7}
 genes <- c("GABPA", "NANOG", "SOX2", "POU5F1", "TFAP2C", "GATA4", "GATA3",
            "GATA1", "TEAD4", "FOXA1", "RARG", "NR5A2", "ESRRB", "CTCF", "KLF4")
@@ -82,9 +94,9 @@ facet_plot(p, panel="Motif", data = d,
 
 ## Reference
 
-1. Wu J, Huang B, Chen H, et al (2016) The landscape of accessible chromatin in mammalian preimplantation embryos. Nature 534:652–657. https://doi.org/10.1038/nature18606
-2. Yu G, Li F, Qin Y, et al (2010) GOSemSim: an R package for measuring semantic similarity among GO terms and gene products. Bioinformatics 26:976–978. https://doi.org/10.1093/bioinformatics/btq064
-3. Yu G, Wang L-G, Han Y, He Q-Y (2012) clusterProfiler: an R Package for Comparing Biological Themes Among Gene Clusters. OMICS J Integr Biol 16:284–287. https://doi.org/10.1089/omi.2011.0118
-4. Yu G, Wang L-G, Yan G-R, He Q-Y (2015) DOSE: an R/Bioconductor package for disease ontology semantic and enrichment analysis. Bioinformatics 31:608–609. https://doi.org/10.1093/bioinformatics/btu684
-5. Yu G, Smith DK, Zhu H, et al (2017) ggtree: an r package for visualization and annotation of phylogenetic trees with their covariates and other associated data. Methods Ecol Evol 8:28–36. https://doi.org/10.1111/2041-210X.12628
-6. Yu G, Lam TT-Y, Zhu H, Guan Y (2018) Two Methods for Mapping and Visualizing Associated Data on Phylogeny Using Ggtree. Mol Biol Evol 35:3041–3043. https://doi.org/10.1093/molbev/msy194
+1. Wu J, Huang B, Chen H, et al (2016) The landscape of accessible chromatin in mammalian preimplantation embryos. Nature 534:652-657. https://doi.org/10.1038/nature18606
+2. Yu G, Li F, Qin Y, et al (2010) GOSemSim: an R package for measuring semantic similarity among GO terms and gene products. Bioinformatics 26:976-978. https://doi.org/10.1093/bioinformatics/btq064
+3. Yu G, Wang L-G, Han Y, He Q-Y (2012) clusterProfiler: an R Package for Comparing Biological Themes Among Gene Clusters. OMICS J Integr Biol 16:284-287. https://doi.org/10.1089/omi.2011.0118
+4. Yu G, Wang L-G, Yan G-R, He Q-Y (2015) DOSE: an R/Bioconductor package for disease ontology semantic and enrichment analysis. Bioinformatics 31:608-609. https://doi.org/10.1093/bioinformatics/btu684
+5. Yu G, Smith DK, Zhu H, et al (2017) ggtree: an r package for visualization and annotation of phylogenetic trees with their covariates and other associated data. Methods Ecol Evol 8:28-36. https://doi.org/10.1111/2041-210X.12628
+6. Yu G, Lam TT-Y, Zhu H, Guan Y (2018) Two Methods for Mapping and Visualizing Associated Data on Phylogeny Using Ggtree. Mol Biol Evol 35:3041-3043. https://doi.org/10.1093/molbev/msy194
