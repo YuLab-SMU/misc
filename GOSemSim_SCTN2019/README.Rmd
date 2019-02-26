@@ -19,7 +19,7 @@ library(clusterProfiler)
 ```
 
 
-```{r fig.width=7, fig.height=7}
+```{r heatmap, fig.width=7, fig.height=7}
 genes <- c("GABPA", "NANOG", "SOX2", "POU5F1", "TFAP2C", "GATA4", "GATA3",
            "GATA1", "TEAD4", "FOXA1", "RARG", "NR5A2", "ESRRB", "CTCF", "KLF4")
 
@@ -41,7 +41,7 @@ DOSE::simplot(sim)
 
 ## Hierarchical clustering
 
-```{r fig.width=5, fig.height=5}
+```{r tree, fig.width=5, fig.height=5}
 library(ggtree)
 phylo <- ape::as.phylo(hclust(as.dist(1-sim), method="ward.D"))
 p = ggtree(phylo) +  geom_tiplab()
@@ -50,7 +50,7 @@ print(p + xlim(0, 0.5))
 
 ## Semantic clustering + expression profile
 
-```{r fig.width=10, fig.height=5.9}
+```{r tree_expr, fig.width=10, fig.height=5.9}
 library(tidyr)
 library(dplyr)
 

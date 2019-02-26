@@ -32,7 +32,7 @@ DOSE::simplot(sim)
 
     ## Using ID as id variables
 
-![](README_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
+![](README_files/figure-gfm/heatmap-1.png)<!-- -->
 
 ## Hierarchical clustering
 
@@ -43,7 +43,7 @@ p = ggtree(phylo) +  geom_tiplab()
 print(p + xlim(0, 0.5))
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
+![](README_files/figure-gfm/tree-1.png)<!-- -->
 
 ## Semantic clustering + expression profile
 
@@ -119,7 +119,7 @@ facet_plot(p, panel="Motif", data = d,
   scale_size_continuous(range=c(0,10), name = "-log(p value)")
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
+![](README_files/figure-gfm/tree_expr-1.png)<!-- -->
 
 ## Reference
 
