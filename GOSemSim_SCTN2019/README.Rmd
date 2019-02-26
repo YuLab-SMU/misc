@@ -1,0 +1,76 @@
+---
+output:
+  md_document:
+    variant: gfm
+html_preview: false
+---
+
+```{r fig.width=7, fig.height=7}
+genes <- c("GABPA", "NANOG", "SOX2", "POU5F1", "TFAP2C", "GATA4", "GATA3",
+           "GATA1", "TEAD4", "FOXA1", "RARG", "NR5A2", "ESRRB", "CTCF", "KLF4")
+
+genes.df <- clusterProfiler::bitr(genes, "SYMBOL", "ENTREZID", "org.Hs.eg.db")
+
+eg <- genes.df[,2]
+genes <- genes.df[,1]
+names(genes) <- eg
+
+library(GOSemSim)
+hsGO <- godata('org.Hs.eg.db', ont="BP")
+
+sim <- mgeneSim(eg, semData = hsGO, measure = "Wang", combine = "BMA", verbose=FALSE)
+
+rownames(sim) <- genes[rownames(sim)]
+colnames(sim) <- genes[colnames(sim)]
+DOSE::simplot(sim)
+```
+
+```{r fig.width=5, fig.height=5}
+library(ggtree)
+phylo <- ape::as.phylo(hclust(as.dist(1-sim), method="ward.D"))
+p = ggtree(phylo) +  geom_tiplab()
+print(p + xlim(0, 0.5))
+```
+
+```{r fig.width=10, fig.height=5.9}
+mergefpkm <- read.table("easy_input.txt",header = T, as.is = 1)
+head(mergefpkm)
+
+## filtering with motifs in the nature paper:
+## The landscape of accessible chromatin in mammalian preimplantation embryos
+
+papermotif <- c("GABPA","NANOG","SOX2","POU5F1","TFAP2C","GATA4","GATA3","GATA1",
+                "TEAD4","FOXA1","RARG","NR5A2","ESRRB","CTCF","KLF4")
+pmergefpkm <- merge(mergefpkm,data.frame(gene=papermotif),by="gene")
+
+library(tidyr)
+library(dplyr)
+
+pscore <- pmergefpkm[, 1:8] %>% gather(type, pscore, -gene) %>%
+  group_by(gene, type) %>% summarise(pscore = max(pscore))
+pscore$type[pscore$type == "icm"] = "ICM"
+
+fpkm <- pmergefpkm[,c(1,13:17)] %>% gather(type, FPKM, -gene)
+fpkm$type <- sub("^X(\\d)(.*)$", "\\2\\1", fpkm$type)
+
+d <- left_join(pscore, fpkm, by=c("gene", "type")) %>%
+  filter(!is.na(FPKM))
+
+d$pscore[d$pscore > 500] = 500
+d$pscore[d$pscore < 10] = 10
+d$FPKM[d$FPKM > 20] = 20
+
+
+d$type <- factor(d$type, levels = c("cell2", "cell4", "cell8", "ICM"))
+
+library(ggplot2)
+
+facet_plot(p, panel="Motif", data = d, 
+           geom = geom_point, mapping = aes(x=as.numeric(type), size = pscore, color=FPKM)) %>%
+  facet_plot(panel="Motif", data=unique(d[d$gene == "GATA4",]),
+             geom = geom_text, mapping = aes(x = as.numeric(type), y=0, label=type)) + 
+  xlim_expand(c(0, 0.5), "Tree") + xlim_expand(c(0.5, 4.5), "Motif") +
+  scale_color_viridis_c() + theme(legend.position = "right") + 
+  scale_size_continuous(range=c(0,10), name = "-log(p value)")
+```
+  
